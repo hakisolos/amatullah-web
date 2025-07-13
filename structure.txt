@@ -1,0 +1,36 @@
+amatullah-backend/
+├── src/
+│   ├── controllers/
+│   │   ├── authController.ts       ← Signup/Login logic (with JWT)
+│   │   └── chatController.ts       ← Handle chat save / AI response
+│   │
+│   ├── models/
+│   │   ├── User.ts                 ← Mongoose User schema
+│   │   └── Chat.ts                 ← Mongoose Chat schema
+│   │
+│   ├── routes/
+│   │   ├── auth.ts                 ← /signup and /login routes
+│   │   ├── chat.ts                 ← /chat route (optional for HTTP testing)
+│   │   └── index.ts                ← Combine & export all routes
+│   │
+│   ├── sockets/
+│   │   └── wsHandler.ts            ← WebSocket handler (auth + message flow)
+│   │
+│   ├── lib/
+│   │   ├── db.ts                   ← Mongoose connection setup
+│   │   ├── jwt.ts                  ← JWT create & verify functions
+│   │   └── utils.ts                ← Random utils (generateChatId, etc.)
+│   │
+│   ├── middleware/
+│   │   └── auth.ts                 ← JWT verification middleware for REST
+│   │
+│   ├── types/
+│   │   └── index.d.ts              ← TypeScript interfaces/types
+│   │
+│   └── server.ts                   ← App entry: sets up Hono, WebSocket, DB
+│
+├── .env                            ← MONGO_URI, JWT_SECRET
+├── tsconfig.json
+├── bun.lockb
+├── .gitignore
+└── README.md
