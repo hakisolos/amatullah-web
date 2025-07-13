@@ -1,4 +1,4 @@
-// src/middleware/auth.ts
+
 import type { MiddlewareHandler } from "hono";
 import { supabase } from "../supabase";
 
@@ -17,8 +17,8 @@ export const verifyToken: MiddlewareHandler = async (c, next) => {
     return c.json({ error: "Invalid or expired token" }, 401);
   }
 
-  // Store the user on context for next handlers
+
   c.set("user", data.user);
 
-  await next(); // Proceed to actual route
+  await next(); 
 };
