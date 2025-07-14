@@ -9,6 +9,11 @@
   "peerDependencies": {
     "typescript": "^5"
   },
+  "scripts": {
+    "start": "bun index.ts",
+    "build": "npm i -g bun && bun install"
+    
+  },
   "dependencies": {
     "@supabase/supabase-js": "^2.50.5",
     "axios": "^1.10.0",
