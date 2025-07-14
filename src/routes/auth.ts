@@ -1,3 +1,4 @@
+
 import { supabase } from "../supabase";
 import { Hono } from "hono";
 const auth = new Hono()
@@ -37,4 +38,5 @@ auth.post("/login", async(c) => {
 auth.get("/confirmed", (c) => {
     return c.text("AUTHENTICATED SUCCESSFULLY")
 })
+
 export default auth;

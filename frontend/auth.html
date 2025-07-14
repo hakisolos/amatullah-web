@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amatullah AI - Authentication</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #fafafa;
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 400px;
+            padding: 2rem;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #000;
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .form-container {
+            background: white;
+            border-radius: 8px;
+            padding: 2rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e5e5e5;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            font-size: 0.9rem;
+            color: #333;
+        }
+
+        input[type="email"],
+        input[type="password"] {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            background: #fff;
+        }
+
+        input[type="email"]:focus,
+        input[type="password"]:focus {
+            outline: none;
+            border-color: #007acc;
+            box-shadow: 0 0 0 3px rgba(0, 122, 204, 0.1);
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 0.75rem;
+            background: #000;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            position: relative;
+        }
+
+        .submit-btn:hover {
+            background: #333;
+        }
+
+        .submit-btn:active {
+            transform: translateY(1px);
+        }
+
+        .submit-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .submit-btn.loading {
+            color: transparent;
+        }
+
+        .submit-btn.loading::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 16px;
+            height: 16px;
+            margin: -8px 0 0 -8px;
+            border: 2px solid #fff;
+            border-top: 2px solid transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .divider {
+            text-align: center;
+            margin: 1.5rem 0;
+            position: relative;
+            color: #666;
+            font-size: 0.85rem;
+        }
+
+        .divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: #e5e5e5;
+        }
+
+        .divider span {
+            background: white;
+            padding: 0 1rem;
+        }
+
+        .toggle-btn {
+            width: 100%;
+            padding: 0.75rem;
+            background: transparent;
+            color: #666;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: background-color 0.2s, color 0.2s;
+        }
+
+        .toggle-btn:hover {
+            background: #f8f8f8;
+            color: #333;
+        }
+
+        .form-title {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #000;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .error-message {
+            background: #fee;
+            border: 1px solid #fcc;
+            color: #c33;
+            padding: 0.75rem;
+            border-radius: 6px;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .success-message {
+            background: #efe;
+            border: 1px solid #cfc;
+            color: #3c3;
+            padding: 0.75rem;
+            border-radius: 6px;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .dashboard {
+            text-align: center;
+            background: white;
+            border-radius: 8px;
+            padding: 2rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e5e5e5;
+        }
+
+        .welcome-message {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #000;
+        }
+
+        .user-info {
+            background: #f8f8f8;
+            padding: 1rem;
+            border-radius: 6px;
+            margin-bottom: 1.5rem;
+        }
+
+        .logout-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .logout-btn:hover {
+            background: #c82333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">Amatullah AI</div>
+            <div class="subtitle">Intelligence with purpose</div>
+        </div>
+
+        <!-- Auth Forms -->
+        <div id="authContainer" class="form-container">
+            <div id="errorMessage" class="error-message hidden"></div>
+            <div id="successMessage" class="success-message hidden"></div>
+
+            <!-- Login Form -->
+            <form id="loginForm">
+                <div class="form-title">Sign In</div>
+                
+                <div class="form-group">
+                    <label for="loginEmail">Email</label>
+                    <input type="email" id="loginEmail" name="email" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="loginPassword">Password</label>
+                    <input type="password" id="loginPassword" name="password" required>
+                </div>
+
+                <button type="submit" class="submit-btn" id="loginBtn">Sign In</button>
+            </form>
+
+            <!-- Signup Form -->
+            <form id="signupForm" class="hidden">
+                <div class="form-title">Create Account</div>
+                
+                <div class="form-group">
+                    <label for="signupEmail">Email</label>
+                    <input type="email" id="signupEmail" name="email" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="signupPassword">Password</label>
+                    <input type="password" id="signupPassword" name="password" required minlength="6">
+                </div>
+
+                <button type="submit" class="submit-btn" id="signupBtn">Create Account</button>
+            </form>
+
+            <div class="divider">
+                <span>or</span>
+            </div>
+
+            <button id="toggleForm" class="toggle-btn">
+                <span id="toggleText">Create new account</span>
+            </button>
+        </div>
+
+        <!-- Dashboard -->
+        <div id="dashboard" class="dashboard hidden">
+            <div class="welcome-message">Welcome back!</div>
+            <div class="user-info">
+                <p><strong>Username:</strong> <span id="username"></span></p>
+                <p><strong>Email:</strong> <span id="userEmail"></span></p>
+            </div>
+            <button id="logoutBtn" class="logout-btn">Logout</button>
+        </div>
+    </div>
+
+    <script>
+        // Configuration - Update this with your actual backend URL
+        const API_BASE_URL = 'http://localhost:5000'; // Change this to your backend URL
+        
+        // DOM Elements
+        const authContainer = document.getElementById('authContainer');
+        const dashboard = document.getElementById('dashboard');
+        const loginForm = document.getElementById('loginForm');
+        const signupForm = document.getElementById('signupForm');
+        const toggleBtn = document.getElementById('toggleForm');
+        const toggleText = document.getElementById('toggleText');
+        const errorMessage = document.getElementById('errorMessage');
+        const successMessage = document.getElementById('successMessage');
+        const loginBtn = document.getElementById('loginBtn');
+        const signupBtn = document.getElementById('signupBtn');
+        const logoutBtn = document.getElementById('logoutBtn');
+
+        let isLoginMode = true;
+
+        // Utility functions
+        function showError(message) {
+            errorMessage.textContent = message;
+            errorMessage.classList.remove('hidden');
+            successMessage.classList.add('hidden');
+        }
+
+        function showSuccess(message) {
+            successMessage.textContent = message;
+            successMessage.classList.remove('hidden');
+            errorMessage.classList.add('hidden');
+        }
+
+        function hideMessages() {
+            errorMessage.classList.add('hidden');
+            successMessage.classList.add('hidden');
+        }
+
+        function setLoading(button, isLoading) {
+            if (isLoading) {
+                button.classList.add('loading');
+                button.disabled = true;
+            } else {
+                button.classList.remove('loading');
+                button.disabled = false;
+            }
+        }
+
+        function extractUsername(email) {
+            return email.split('@')[0];
+        }
+
+        function saveUserData(userData) {
+    const username = extractUsername(userData.user.email);
+    const userInfo = {
+        username: username,
+        email: userData.user.email,
+        userId: userData.user.id,
+        session: userData.session
+    };
+
+    // Save to sessionStorage
+    sessionStorage.setItem('currentUser', JSON.stringify(userInfo));
+
+    // 💌 Save to localStorage so chat.html can detect login
+    localStorage.setItem('amatullah_user_id', userInfo.userId);
+
+    window.currentUser = userInfo;
+    return userInfo;
+}
+
+        function redirectToChat(userInfo) {
+            // Store user info for the chat page (optional)
+            sessionStorage.setItem('currentUser', JSON.stringify(userInfo));
+            
+            // Redirect to chat page
+            window.location.href = '/chat';
+        }
+
+        function showAuth() {
+            authContainer.classList.remove('hidden');
+            dashboard.classList.add('hidden');
+            window.currentUser = null;
+            sessionStorage.removeItem('currentUser');
+        }
+
+        // API calls
+        async function loginUser(email, password) {
+            const response = await fetch(`/auth/login`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email, password })
+            });
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(errorText || 'Login failed');
+            }
+
+            return await response.json();
+        }
+
+        async function signupUser(email, password) {
+            const response = await fetch(`/auth/newuser`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email, password })
+            });
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(errorText || 'Signup failed');
+            }
+
+            return await response.json();
+        }
+
+        // Event listeners
+        toggleBtn.addEventListener('click', () => {
+            isLoginMode = !isLoginMode;
+            hideMessages();
+            
+            if (isLoginMode) {
+                loginForm.classList.remove('hidden');
+                signupForm.classList.add('hidden');
+                toggleText.textContent = 'Create new account';
+            } else {
+                loginForm.classList.add('hidden');
+                signupForm.classList.remove('hidden');
+                toggleText.textContent = 'Back to sign in';
+            }
+        });
+
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            hideMessages();
+            
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            setLoading(loginBtn, true);
+            
+            try {
+                const result = await loginUser(email, password);
+                
+                if (result.data && result.data.user) {
+                    const userInfo = saveUserData(result.data);
+                    showSuccess('Login successful! Redirecting...');
+                    setTimeout(() => redirectToChat(userInfo), 1000);
+                } else {
+                    showError('Login failed. Please check your credentials.');
+                }
+            } catch (error) {
+                showError(error.message || 'Login failed. Please try again.');
+            } finally {
+                setLoading(loginBtn, false);
+            }
+        });
+
+        signupForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            hideMessages();
+            
+            const email = document.getElementById('signupEmail').value;
+            const password = document.getElementById('signupPassword').value;
+            
+            setLoading(signupBtn, true);
+            
+            try {
+                const result = await signupUser(email, password);
+                showSuccess('Account created successfully! Please check your email to verify your account, then sign in.');
+                
+                // Clear form and switch to login
+                signupForm.reset();
+                setTimeout(() => {
+                    toggleBtn.click(); // Switch to login form
+                }, 2000);
+                
+            } catch (error) {
+                showError(error.message || 'Signup failed. Please try again.');
+            } finally {
+                setLoading(signupBtn, false);
+            }
+        });
+
+        logoutBtn.addEventListener('click', () => {
+            showAuth();
+            hideMessages();
+            loginForm.reset();
+            signupForm.reset();
+        });
+
+        // Check if user is already logged in on page load
+       if (window.currentUser) {
+            showDashboard(window.currentUser);
+        }
+
+        // Auto-redirect if already logged in
+        const existingId = localStorage.getItem('amatullah_user_id');
+        if (existingId) {
+            window.location.href = '/chat';
+        }
+    </script>
+</body>
+</html>

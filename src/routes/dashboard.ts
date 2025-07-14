@@ -1,5 +1,6 @@
 import { Hono } from "hono";
 import { supabase } from "../supabase";
+import { serveStatic } from "hono/serve-static";
 
 
 const dash = new Hono()
@@ -12,6 +13,5 @@ dash.get("/", async(c) => {
         }
     )
 })
-
 
 export default dash
