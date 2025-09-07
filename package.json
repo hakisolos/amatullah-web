@@ -10,14 +10,16 @@
     "typescript": "^5"
   },
   "scripts": {
-    "start": "bun index.ts",
+    "start": "pm2 start index.ts --name amatullah --attach",
+    "stop": "pm2 stop amatullah",
     "build": "npm i -g bun && bun install"
-    
   },
   "dependencies": {
+    "@hono/node-server": "^1.19.1",
     "@supabase/supabase-js": "^2.50.5",
     "axios": "^1.10.0",
     "hono": "^4.8.4",
-    "mongoose": "^8.16.2"
+    "mongoose": "^8.16.2",
+    "socket.io": "^4.8.1"
   }
 }
